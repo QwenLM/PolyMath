@@ -10,17 +10,17 @@
 
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2504.12345">
-    <img src="https://img.shields.io/badge/arXiv-2504.12345-b31b1b.svg?logo=arxiv" alt="arXiv Badge"/>
+  <a href="https://arxiv.org/abs/2504.xxx">
+    <img src="https://img.shields.io/badge/arXiv-2504.xxx-b31b1b.svg?logo=arxiv" alt="arXiv Badge"/>
   </a>
-  <a href="https://huggingface.co/your-username/PolyMath">
+  <a href="https://huggingface.co/datasets/Qwen/PolyMath">
     <img src="https://img.shields.io/badge/HuggingFace-Dataset-yellow?logo=huggingface" alt="Hugging Face Badge"/>
   </a>
-  <a href="https://yourwebsite.com">
+  <a href="https://qwen-polymath.github.io/">
     <img src="https://img.shields.io/badge/Leaderboard-Website-brightgreen?logo=trophy" alt="Leaderboard Badge"/>
   </a>
   <a href="./LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg?logo=open-source-initiative" alt="MIT License Badge"/>
+    <img src="https://img.shields.io/badge/License-Apache 2.0-blue.svg?logo=open-source-initiative" alt="Apache-2.0 License Badge"/>
   </a>
 </p>
 
@@ -197,14 +197,14 @@ You can customize `model_list`, `language_list`, and `level_list`. When it is de
 
 ## 📄 Citation
 
-If you use **PolyMath** in your research, please cite us:
+If you use **PolyMath** in your research or find our work useful, please cite us:
 
 ```bibtex
 @misc{polymath2025,
   title     = {PolyMath: Evaluating Mathematical Reasoning in Multilingual Contexts},
   author    = {xxx},
   year      = {2025},
-  eprint    = {2504.12345},
+  eprint    = {2504.xxx},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL}
 }
