@@ -10,8 +10,8 @@
 
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2504.xxx">
-    <img src="https://img.shields.io/badge/arXiv-2504.xxx-b31b1b.svg?logo=arxiv" alt="arXiv Badge"/>
+  <a href="https://arxiv.org/abs/2504.18428">
+    <img src="https://img.shields.io/badge/arXiv-2504.18428-b31b1b.svg?logo=arxiv" alt="arXiv Badge"/>
   </a>
   <a href="https://huggingface.co/datasets/Qwen/PolyMath">
     <img src="https://img.shields.io/badge/HuggingFace-Dataset-yellow?logo=huggingface" alt="Hugging Face Badge"/>
@@ -31,13 +31,13 @@ This is the official repository for the paper **"PolyMath: Evaluating Mathematic
 
 ## 📖 Introduction
 
-**PolyMath** is a multilingual mathematical reasoning benchmark **covering 18 languages** and **4 easy-to-hard difficulty levels**. Our benchmark ensures *difficulty comprehensiveness*, *language diversity*, and *high-quality translation*, making it a highly discriminative multilingual mathematical benchmark in the era of reasoning LLMs.
+**PolyMath** is a multilingual mathematical reasoning benchmark covering 18 languages and 4 easy-to-hard difficulty levels, with 9,000 high-quality problem samples. Our benchmark ensures difficulty comprehensiveness, language diversity, and high-quality translation, making it a highly discriminative multilingual mathematical benchmark in the era of reasoning LLMs.
 
 
 
 ## ✨ Features
 
-- 📈 **Broad Difficulty Range:** PolyMath defines and partitions mathematical difficulty across four levels using two core dimensions: **Thought Depth** and **Knowledge Breadth**, ranging from K-12 to Olympiad and advanced frontier mathematics, with 125 problems per language at each level.
+- 📈 **Broad Difficulty Range:** PolyMath defines and partitions **mathematical difficulty across four levels** using two core dimensions: *Thought Depth* and *Knowledge Breadth*, ranging from K-12 to Olympiad and advanced frontier mathematics, with **125 problems per language at each level**.
 
 <div align="center">
   <img src="ASSETS/level.png" alt="logo" width="85%"/>
@@ -45,7 +45,7 @@ This is the official repository for the paper **"PolyMath: Evaluating Mathematic
 
 
 
-- 🌍 **Language Diversity:** Each problem in PolyMath is available in **18 parallel language versions**, encompassing **over 75% of the world’s native speakers** and major language families, ensuring diversity across both high-resource and low-resource languages.
+- 🌍 **Language Diversity:** Each problem in PolyMath is available in **18 parallel language versions**, encompassing over 75% of the world’s native speakers and major language families, ensuring diversity across both high-resource and low-resource languages.
 
 <div align="center">
   <img src="ASSETS/language.png" alt="logo" width="50%"/>
@@ -200,12 +200,13 @@ You can customize `model_list`, `language_list`, and `level_list`. When it is de
 If you use **PolyMath** in your research or find our work useful, please cite us:
 
 ```bibtex
-@misc{polymath2025,
-  title     = {PolyMath: Evaluating Mathematical Reasoning in Multilingual Contexts},
-  author    = {xxx},
-  year      = {2025},
-  eprint    = {2504.xxx},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL}
+@misc{wang2025polymath,
+      title={PolyMath: Evaluating Mathematical Reasoning in Multilingual Contexts}, 
+      author={Yiming Wang and Pei Zhang and Jialong Tang and Haoran Wei and Baosong Yang and Rui Wang and Chenshu Sun and Feitong Sun and Jiran Zhang and Junxuan Wu and Qiqian Cang and Yichang Zhang and Fei Huang and Junyang Lin and Fei Huang and Jingren Zhou},
+      year={2025},
+      eprint={2504.18428},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2504.18428}, 
 }
 ```
