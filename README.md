@@ -61,27 +61,19 @@ This is the official repository for the paper **"PolyMath: Evaluating Mathematic
 
 ## 🛠️ Data Usage
 
-The PolyMath dataset is publicly available and can be accessed in the following ways:
+The PolyMath dataset is publicly available and can be accessed in [![Hugging Face](https://img.shields.io/badge/Dataset-HuggingFace-yellow?logo=huggingface)](https://huggingface.co/datasets/your-username/PolyMath), with the following format:
 
-### 📂 Option 1: Use from HuggingFace
-
-The full dataset is hosted on [![Hugging Face](https://img.shields.io/badge/Dataset-HuggingFace-yellow?logo=huggingface)](https://huggingface.co/datasets/your-username/PolyMath).
-
-
-### 📁 Option 2: Use local files from GitHub
-
-You can also access the same data locally from the `/data` directory in this repository:
 
 ```
 PolyMath/
-└── data/
-    ├── ar/
-    │   ├── easy.jsonl
-    │   ├── medium.jsonl
-    │   └── ...
-    ├── bn/
-    ├── ...
-    └── zh/
+  ├── ar/
+  │   ├── low.parquet
+  │   ├── medium.parquet
+  │   ├── high.parquet
+  |   └── top.parquet
+  ├── bn/
+  ├── ...
+  └── zh/
 ```
 
 * Additionally, all prompts used in the inference process are provided in `instruction.py`.
