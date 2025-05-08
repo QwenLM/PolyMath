@@ -61,7 +61,7 @@ This is the official repository for the paper **"PolyMath: Evaluating Mathematic
 
 ## 🛠️ Data Usage
 
-The PolyMath dataset is publicly available and can be accessed in [![Hugging Face](https://img.shields.io/badge/Dataset-HuggingFace-yellow?logo=huggingface)](https://huggingface.co/datasets/your-username/PolyMath), with the following format:
+The PolyMath dataset is publicly available and can be accessed in [![Hugging Face](https://img.shields.io/badge/Dataset-HuggingFace-yellow?logo=huggingface)](https://huggingface.co/datasets/Qwen/PolyMath), with the following format:
 
 
 ```
