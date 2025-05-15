@@ -192,13 +192,12 @@ You can customize `model_list`, `language_list`, and `level_list`. When it is de
 If you use **PolyMath** in your research or find our work useful, please cite us:
 
 ```bibtex
-@misc{wang2025polymath,
-      title={PolyMath: Evaluating Mathematical Reasoning in Multilingual Contexts}, 
-      author={Yiming Wang and Pei Zhang and Jialong Tang and Haoran Wei and Baosong Yang and Rui Wang and Chenshu Sun and Feitong Sun and Jiran Zhang and Junxuan Wu and Qiqian Cang and Yichang Zhang and Fei Huang and Junyang Lin and Fei Huang and Jingren Zhou},
-      year={2025},
-      eprint={2504.18428},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2504.18428}, 
+@article{wang2025polymath,
+  title={PolyMath: Evaluating Mathematical Reasoning in Multilingual Contexts},
+  author={Yiming Wang and Pei Zhang and Jialong Tang and Haoran Wei and Baosong Yang and Rui Wang and Chenshu Sun and Feitong Sun and Jiran Zhang and Junxuan Wu and Qiqian Cang and Yichang Zhang and Fei Huang and Junyang Lin and Fei Huang and Jingren Zhou},
+  journal={arXiv preprint arXiv:2504.18428},
+  year={2025},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2504.18428}, 
 }
 ```
