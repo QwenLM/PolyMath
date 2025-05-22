@@ -5,3 +5,4 @@ sympy==1.12.1
 antlr4-python3-runtime==4.11.0
 pebble==5.1.0
 langdetect==1.0.9
+word2number==1.1
