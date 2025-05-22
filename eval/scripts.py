@@ -3,6 +3,10 @@ from typing import Union, Optional, Any
 import regex
 from bundled.latex2sympy2.latex2sympy2 import latex2sympy
 from bundled.symeval import EvaluatorMath
+import multiprocessing
+from math import isclose
+import time
+from word2number import w2n
 
 MULTILINGUAL_ANSWER_REGEXES = [
     "Answer\s*:",
@@ -191,6 +195,34 @@ unit_texts = [
 ]
 
 unit_texts.extend([t + "s" for t in unit_texts])
+
+def numeric_equal(prediction: float, reference: float):
+    # Note that relative tolerance has significant impact
+    # on the result of the synthesized GSM-Hard dataset
+    # if reference.is_integer():
+    #     return isclose(reference, round(prediction), abs_tol=1e-4)
+    # else:
+    # prediction = round(prediction, len(str(reference).split(".")[-1]))
+    return isclose(reference, prediction, rel_tol=1e-4)
+
+def parse_digits(num):
+    num = regex.sub(",", "", str(num))
+    try:
+        return float(num)
+    except:
+        if num.endswith("%"):
+            num = num[:-1]
+            if num.endswith("\\"):
+                num = num[:-1]
+            try:
+                return float(num) / 100
+            except:
+                pass
+    return None
+
+def is_digit(num):
+    # paired with parse_digits
+    return parse_digits(num) is not None
 
 def normalize_extracted_answer(extracted_answer: str) -> str:
     return (
@@ -410,6 +442,18 @@ def strip_string(string, skip_unit=False):
 
     return string
 
+def str_to_pmatrix(input_str):
+    input_str = input_str.strip()
+    matrix_str = re.findall(r"\{.*,.*}", input_str)
+    pmatrix_list = []
+
+    for m in matrix_str:
+        m = m.strip("{}")
+        pmatrix = r"\begin{pmatrix}" + m.replace(",", "\\") + r"\end{pmatrix}"
+        pmatrix_list.append(pmatrix)
+
+    return ", ".join(pmatrix_list)
+    
 def choice_answer_clean(pred: str):
     pred = pred.strip("\n").rstrip(".").rstrip("/").strip(" ").lstrip(":")
     # Clean the answer based on the dataset
@@ -429,6 +473,7 @@ def extract_answer(pred_str, data_name, use_last_number=True):
         # TODO check multiple choice
         return choice_answer_clean(pred_str)
 
+    #########
     if "final answer is $" in pred_str and "$. I hope" in pred_str:
         # minerva_math
         tmp = pred_str.split("final answer is $", 1)[1]
@@ -554,12 +599,29 @@ def symbolic_equal(a, b):
 
     return False
 
+def symbolic_equal_process(a, b, output_queue):
+    result = symbolic_equal(a, b)
+    output_queue.put(result)
+def call_with_timeout(func, *args, timeout=1, **kwargs):
+    output_queue = multiprocessing.Queue()
+    process_args = args + (output_queue,)
+    process = multiprocessing.Process(target=func, args=process_args, kwargs=kwargs)
+    process.start()
+    process.join(timeout)
+
+    if process.is_alive():
+        process.terminate()
+        # process.join()
+        return False
+
+    return output_queue.get()
+
 def math_equal(
     prediction: Union[bool, float, str],
     reference: Union[float, str],
     include_percentage: bool = True,
     is_close: bool = True,
-    timeout: bool = False,
+    timeout: bool = True,
 ) -> bool:
     """
     Exact match of math if and only if:
@@ -579,9 +641,9 @@ def math_equal(
 
     try:  # 1. numerical equal
         if is_digit(prediction) and is_digit(reference):
-            strict_match_result = deal_strict_match(prediction, reference)
-            if strict_match_result is not None:
-                return strict_match_result
+            # strict_match_result = deal_strict_match(prediction, reference)
+            # if strict_match_result is not None:
+            #     return strict_match_result
             prediction = parse_digits(prediction)
             reference = parse_digits(reference)
             # number questions
@@ -605,15 +667,15 @@ def math_equal(
 
     if not prediction and prediction not in [0, False]:
         return False
-
+    
     # 2. symbolic equal
     reference = str(reference).strip()
     prediction = str(prediction).strip()
 
     ## pmatrix (amps)
-    # if "pmatrix" in prediction and not "pmatrix" in reference:
-    #     reference = str_to_pmatrix(reference)
-
+    if "pmatrix" in prediction and not "pmatrix" in reference:
+        reference = str_to_pmatrix(reference)
+    
     ## deal with [], (), {}
     pred_str, ref_str = prediction, reference
     if (
@@ -632,7 +694,7 @@ def math_equal(
         pred_str = pred_str.replace(s, "")
     if pred_str.lower() == ref_str.lower():
         return True
-
+    
     ## [a, b] vs. [c, d], return a==c and b==d
     if (
         regex.match(r"(\(|\[).+(\)|\])", prediction) is not None
@@ -708,14 +770,19 @@ def math_equal(
             matched = False
         if matched:
             return True
-
+    
     if prediction.count("=") == 1 and reference.count("=") == 1:
         pred = prediction.split("=")
         pred = f"{pred[0].strip()} - ({pred[1].strip()})"
         ref = reference.split("=")
         ref = f"{ref[0].strip()} - ({ref[1].strip()})"
-        if symbolic_equal(pred, ref) or symbolic_equal(f"-({pred})", ref):
-            return True
+        if timeout:
+            if call_with_timeout(symbolic_equal_process, pred, ref) or call_with_timeout(symbolic_equal_process, f"-({pred})", ref):
+                return True
+        else:
+            if symbolic_equal(pred, ref) or symbolic_equal(f"-({pred})", ref):
+                return True
+
     elif (
         prediction.count("=") == 1
         and len(prediction.split("=")[0].strip()) <= 2
@@ -735,6 +802,7 @@ def math_equal(
         ):
             return True
 
+    
     # symbolic equal with sympy
     if timeout:
         if call_with_timeout(symbolic_equal_process, prediction, reference):
@@ -818,10 +886,6 @@ class AdaptedEvaluatorMath(EvaluatorMath):
 
 
 
-
-
-
-
 def multi_math_equal(answer, response, choice=False):
     if choice:
         final_result = None
@@ -836,16 +900,20 @@ def multi_math_equal(answer, response, choice=False):
         
         acc = 1.0 if final_result == answer else 0.0
         failed = 1.0 if final_result is None else 0.0
-        return bool(acc)
+        return bool(acc), final_result, failed
     else:
-        prediction = extract_answer(response, '')
-        prediction = strip_string(prediction, skip_unit='' in STRIP_EXCEPTIONS)
-        result1 = math_equal(answer, prediction)
+        prediction1 = extract_answer(response, '')
+        prediction1 = strip_string(prediction1, skip_unit='' in STRIP_EXCEPTIONS)
+        result1 = math_equal(answer, prediction1)
 
+        prediction2 = None
         try:
             evaluator = AdaptedEvaluatorMath()
-            prediction = evaluator.extract_ans(response)
-            result2 = evaluator.eq(answer, prediction)
+            prediction2 = evaluator.extract_ans(response)
+            result2 = evaluator.eq(answer, prediction2)
         except:
             result2 = 0.0
-        return result1 or result2
+        
+        prediction = ((prediction1, result1), (prediction2, result2))
+        # return bool(result1) or bool(result2), prediction, "boxed" not in response
+        return bool(result1), prediction, "boxed" not in response
